@@ -1,14 +1,10 @@
 package com.mujd.moveAppsTest.model;
 
-import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
-import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
 @Entity
@@ -26,10 +22,6 @@ public class Phone {
 
 	@Column(name = "countryCode")
 	private String countryCode;
-
-//	@ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-//	@JoinColumn(name = "user_id")
-//	private User user;
 
 	public Phone() {
 		super();

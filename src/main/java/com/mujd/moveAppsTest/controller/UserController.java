@@ -1,6 +1,5 @@
 package com.mujd.moveAppsTest.controller;
 
-import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -22,7 +21,6 @@ import org.springframework.web.bind.annotation.RestController;
 import com.mujd.moveAppsTest.exception.ResourceBadRequestException;
 import com.mujd.moveAppsTest.exception.ResourceFoundWithNoContentException;
 import com.mujd.moveAppsTest.exception.ResourceNotFoundException;
-import com.mujd.moveAppsTest.model.Phone;
 import com.mujd.moveAppsTest.model.User;
 import com.mujd.moveAppsTest.service.IUserService;
 import com.mujd.moveAppsTest.validation.EmailValidation;
@@ -51,7 +49,8 @@ public class UserController {
 
 	// get user by id
 	@GetMapping("/users/{id}")
-	public ResponseEntity<User> getUserById(@PathVariable(value = "id") Long userId) throws ResourceNotFoundException {
+	public ResponseEntity<User> getUserById(@PathVariable(value = "id") String userId)
+			throws ResourceNotFoundException {
 		User user = iUserservice.findById(userId)
 				.orElseThrow(() -> new ResourceNotFoundException("Usuario con el id '" + userId + "' no existe."));
 
@@ -69,17 +68,6 @@ public class UserController {
 		if (userDB == null) {
 			if (validEmail && validPassword) {
 
-//				User newUser = new User();
-//				Phone phone = new Phone();
-//				phone.setUser(user);
-//				List<Phone> phoneList = new ArrayList<>();
-//				phoneList.add(phone);
-//				user.setPhones(phoneList);
-//				newUser.setEmail(user.getEmail());
-//				newUser.setPassword(user.getPassword());
-//				newUser.setToken(user.getToken());
-//				newUser.setRole(user.getRole());
-
 				iUserservice.save(user);
 				return ResponseEntity.ok().body(user);
 			} else {
@@ -92,7 +80,7 @@ public class UserController {
 
 	// update user
 	@PutMapping("/users/{id}")
-	public ResponseEntity<User> updateUser(@PathVariable(value = "id") Long userId, @Valid @RequestBody User user)
+	public ResponseEntity<User> updateUser(@PathVariable(value = "id") String userId, @Valid @RequestBody User user)
 			throws ResourceNotFoundException {
 		User userDB = iUserservice.findById(userId)
 				.orElseThrow(() -> new ResourceNotFoundException("Usuario con el id '" + userId + "' no existe."));
@@ -108,7 +96,7 @@ public class UserController {
 
 	// delete user
 	@DeleteMapping("/users/{id}")
-	public Map<String, Boolean> deleteUser(@PathVariable(value = "id") Long userId) throws ResourceNotFoundException {
+	public Map<String, Boolean> deleteUser(@PathVariable(value = "id") String userId) throws ResourceNotFoundException {
 		User user = iUserservice.findById(userId)
 				.orElseThrow(() -> new ResourceNotFoundException("Usuario con el id '" + userId + "' no existe."));
 		this.iUserservice.delete(user);

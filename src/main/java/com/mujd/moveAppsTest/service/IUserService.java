@@ -14,7 +14,7 @@ public interface IUserService {
 
 	public void save(User user);
 
-	public Optional<User> findById(Long id);
+	public Optional<User> findById(String id);
 
 	public User updateUser(User user);
 

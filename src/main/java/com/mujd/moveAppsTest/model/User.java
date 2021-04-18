@@ -2,7 +2,6 @@ package com.mujd.moveAppsTest.model;
 
 import java.util.Set;
 import java.util.Date;
-import java.util.List;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
@@ -18,13 +17,21 @@ import javax.persistence.OneToMany;
 import javax.persistence.PrePersist;
 import javax.persistence.Table;
 
+import org.hibernate.annotations.GenericGenerator;
+
 @Entity
 @Table(name = "users")
 public class User {
 
+	// @Id
+	// @GeneratedValue(strategy = GenerationType.IDENTITY)
+//	@Id
+//	@GeneratedValue(generator = "system-uuid")
+//	@GenericGenerator(name = "system-uuid", strategy = "uuid")
 	@Id
-	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	private long id;
+    @GeneratedValue(generator = "uuid2")
+    @GenericGenerator(name = "uuid2", strategy = "org.hibernate.id.UUIDGenerator")
+	private String id;
 
 	@Column(name = "email", unique = true)
 	private String email;
@@ -51,7 +58,6 @@ public class User {
 	@Enumerated(EnumType.STRING)
 	private Roles role = Roles.SUPER_ADMIN;
 
-//	@OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
 	@OneToMany(fetch = FetchType.EAGER, cascade = { CascadeType.ALL })
 	@JoinColumn(name = "user_id")
 	public Set<Phone> phones;
@@ -67,7 +73,7 @@ public class User {
 		super();
 	}
 
-	public User(long id, String email, String password, Date created, Date updated, Date last_login, String token,
+	public User(String id, String email, String password, Date created, Date updated, Date last_login, String token,
 			Boolean isActive, Roles role, Set<Phone> phones) {
 		super();
 		this.id = id;
@@ -82,11 +88,11 @@ public class User {
 		this.phones = phones;
 	}
 
-	public long getId() {
+	public String getId() {
 		return id;
 	}
 
-	public void setId(long id) {
+	public void setId(String id) {
 		this.id = id;
 	}
 
@@ -161,15 +167,6 @@ public class User {
 	public void setPhones(Set<Phone> phones) {
 		this.phones = phones;
 	}
-
-	// public void addPhone(Phone phone) {
-//		// As said Hibernate will ignore it when persist this relationship.
-//		// Add it mainly for the consistency of this relationship for both side in the
-//		// Java instance
-//		this.phones.add(phone);
-//
-//		phone.setUser(this);
-//	}
 
 	public enum Roles {
 		SUPER_ADMIN, EMPLOYEE, SUPERVISOR,

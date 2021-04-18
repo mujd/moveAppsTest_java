@@ -2,6 +2,7 @@ package com.mujd.moveAppsTest.repository;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Example;
@@ -98,7 +99,7 @@ public class UserRepository implements IUserRepository {
 	}
 
 	@Override
-	public Optional<User> findById(Long id) {
+	public Optional<User> findById(String id) {
 		// TODO Auto-generated method stub
 		return null;
 	}
@@ -172,7 +173,7 @@ public class UserRepository implements IUserRepository {
 	private static String USER_LIST_QUERY = "SELECT u.* FROM USER AS u";
 
 	private static Roles roles;
-	private static List<Phone> phones;
+	private static Set<Phone> phones;
 
 	public List<User> findByIsActive(Boolean isActive) {
 		String query = USER_LIST_QUERY;
@@ -182,9 +183,9 @@ public class UserRepository implements IUserRepository {
 		}
 		query += " INNER JOIN phones AS p ON u.phoneid=p.id ";
 		return jdbcOperations.query(query, (rs, rowNum) -> {
-			return new User(rs.getLong(rowNum), rs.getString("email"), rs.getString("password"), rs.getDate("created"),
-					rs.getDate("updated"), rs.getDate("last_login"), rs.getString("token"), rs.getBoolean("is_active"),
-					roles, phones);
+			return new User(rs.getString(rowNum), rs.getString("email"), rs.getString("password"),
+					rs.getDate("created"), rs.getDate("updated"), rs.getDate("last_login"), rs.getString("token"),
+					rs.getBoolean("is_active"), roles, phones);
 		});
 	};
 }
