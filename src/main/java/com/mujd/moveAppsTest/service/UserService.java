@@ -1,6 +1,7 @@
 package com.mujd.moveAppsTest.service;
 
 import java.util.List;
+import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -17,24 +18,46 @@ public class UserService implements IUserService {
 
 	@Override
 	@Transactional
+	public List<User> listUsers() {
+		return (List<User>) userRepository.findAll();
+	}
+
+	@Override
+	@Transactional
+	public void delete(User user) {
+		userRepository.delete(user);
+	}
+
+	@Override
+	@Transactional
+	public void deleteUserById(long id) {
+		userRepository.deleteById(id);
+	}
+
+	@Override
+	@Transactional
+	public void save(User user) {
+		userRepository.save(user);
+	}
+
+	@Override
+	public Optional<User> findById(Long id) {
+		return userRepository.findById(id);
+	}
+
+	@Override
+	@Transactional
+	public User updateUser(User user) {
+		return (User) userRepository.save(user);
+	}
+
+	@Override
+	@Transactional
 	public User findByEmail(User user) {
 		return userRepository.findByEmail(user.getEmail());
 	}
 
-	// @Override
-	// @Transactional
-	// public User findByIsActive(User user) {
-	// return userRepository.findByIsActive(user.getIsActive());
-	// }
-
 	public List<User> findByIsActive(Boolean isActive) {
 		return userRepository.findByIsActive(isActive);
 	}
-
-	// @Override
-	// @Transactional
-	// public List<User> selectAllUsersByIsActive(Boolean isActive) {
-	// return userRepository.selectAllUsersByIsActive(isActive);
-	// }
-
 }

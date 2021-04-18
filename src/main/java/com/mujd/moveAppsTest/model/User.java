@@ -1,14 +1,20 @@
 package com.mujd.moveAppsTest.model;
 
+import java.util.Set;
 import java.util.Date;
+import java.util.List;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.OneToMany;
 import javax.persistence.PrePersist;
 import javax.persistence.Table;
 
@@ -45,6 +51,11 @@ public class User {
 	@Enumerated(EnumType.STRING)
 	private Roles role = Roles.SUPER_ADMIN;
 
+//	@OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
+	@OneToMany(fetch = FetchType.EAGER, cascade = { CascadeType.ALL })
+	@JoinColumn(name = "user_id")
+	public Set<Phone> phones;
+
 	@PrePersist
 	public void prePersist() {
 		created = new Date();
@@ -57,7 +68,7 @@ public class User {
 	}
 
 	public User(long id, String email, String password, Date created, Date updated, Date last_login, String token,
-			Boolean isActive, Roles role) {
+			Boolean isActive, Roles role, Set<Phone> phones) {
 		super();
 		this.id = id;
 		this.email = email;
@@ -68,6 +79,7 @@ public class User {
 		this.token = token;
 		this.isActive = isActive;
 		this.role = role;
+		this.phones = phones;
 	}
 
 	public long getId() {
@@ -141,6 +153,23 @@ public class User {
 	public void setRole(Roles role) {
 		this.role = role;
 	}
+
+	public Set<Phone> getPhones() {
+		return phones;
+	}
+
+	public void setPhones(Set<Phone> phones) {
+		this.phones = phones;
+	}
+
+	// public void addPhone(Phone phone) {
+//		// As said Hibernate will ignore it when persist this relationship.
+//		// Add it mainly for the consistency of this relationship for both side in the
+//		// Java instance
+//		this.phones.add(phone);
+//
+//		phone.setUser(this);
+//	}
 
 	public enum Roles {
 		SUPER_ADMIN, EMPLOYEE, SUPERVISOR,

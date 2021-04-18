@@ -10,6 +10,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.jdbc.core.JdbcOperations;
 
+import com.mujd.moveAppsTest.model.Phone;
 import com.mujd.moveAppsTest.model.User;
 import com.mujd.moveAppsTest.model.User.Roles;
 
@@ -168,26 +169,22 @@ public class UserRepository implements IUserRepository {
 		return null;
 	}
 
-	private static String USER_LIST_QUERY = "SELECT * FROM USER";
+	private static String USER_LIST_QUERY = "SELECT u.* FROM USER AS u";
 
 	private static Roles roles;
-	
+	private static List<Phone> phones;
+
 	public List<User> findByIsActive(Boolean isActive) {
 		String query = USER_LIST_QUERY;
 		if (isActive != null) {
 			query += " WHERE is_active = ";
 			query += isActive.toString();
 		}
-		// long id, String email, String password, Date created, Date updated, Date
-		// last_login, String token, Boolean isActive, Roles role
+		query += " INNER JOIN phones AS p ON u.phoneid=p.id ";
 		return jdbcOperations.query(query, (rs, rowNum) -> {
 			return new User(rs.getLong(rowNum), rs.getString("email"), rs.getString("password"), rs.getDate("created"),
 					rs.getDate("updated"), rs.getDate("last_login"), rs.getString("token"), rs.getBoolean("is_active"),
-					roles);
+					roles, phones);
 		});
 	};
-	// rs.getString("email"), rs.getString("password"), rs.getDate("created"),
-	// rs.getDate("updated"), rs.getDate("last_login"), rs.getString("token"),
-	// rs.getBoolean("is_active"),
-	// rs.getString("role")
 }
