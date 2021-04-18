@@ -4,7 +4,7 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 public class PasswordValidator {
-	private static final String PASSWORD_REGEX = "\\A(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z])\\S{8,}\\z";
+	private static final String PASSWORD_REGEX = "\\A(?=(.*[0-9]){2,2})(?=.*[a-z])(?=.*[A-Z])\\S{8,}\\z";
 	
 	private static Pattern pattern;
 	private Matcher matcher;

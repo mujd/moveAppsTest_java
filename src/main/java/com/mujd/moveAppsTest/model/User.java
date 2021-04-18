@@ -10,7 +10,6 @@ import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
 import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.OneToMany;
@@ -23,14 +22,9 @@ import org.hibernate.annotations.GenericGenerator;
 @Table(name = "users")
 public class User {
 
-	// @Id
-	// @GeneratedValue(strategy = GenerationType.IDENTITY)
-//	@Id
-//	@GeneratedValue(generator = "system-uuid")
-//	@GenericGenerator(name = "system-uuid", strategy = "uuid")
 	@Id
-    @GeneratedValue(generator = "uuid2")
-    @GenericGenerator(name = "uuid2", strategy = "org.hibernate.id.UUIDGenerator")
+	@GeneratedValue(generator = "uuid2")
+	@GenericGenerator(name = "uuid2", strategy = "org.hibernate.id.UUIDGenerator")
 	private String id;
 
 	@Column(name = "email", unique = true)

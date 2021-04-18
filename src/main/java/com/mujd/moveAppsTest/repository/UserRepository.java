@@ -184,8 +184,8 @@ public class UserRepository implements IUserRepository {
 		query += " INNER JOIN phones AS p ON u.phoneid=p.id ";
 		return jdbcOperations.query(query, (rs, rowNum) -> {
 			return new User(rs.getString(rowNum), rs.getString("email"), rs.getString("password"),
-					rs.getDate("created"), rs.getDate("updated"), rs.getDate("last_login"), rs.getString("token"),
-					rs.getBoolean("is_active"), roles, phones);
+					rs.getDate("created"), rs.getDate("updated"), rs.getDate("last_login"), null, rs.getBoolean("is_active"),
+					roles, phones);
 		});
 	};
 }
