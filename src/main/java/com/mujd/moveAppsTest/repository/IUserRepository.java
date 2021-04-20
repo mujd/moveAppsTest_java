@@ -15,5 +15,7 @@ public interface IUserRepository extends JpaRepository<User, Long> {
 
 	public List<User> findByIsActive(Boolean isActive);
 
-	public Optional<User> findById(String id);
+	Optional<User> findById(String id);
+
+	// public Optional<User> findById(String id);
 }

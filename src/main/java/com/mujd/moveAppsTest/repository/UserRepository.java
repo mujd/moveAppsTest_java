@@ -99,12 +99,6 @@ public class UserRepository implements IUserRepository {
 	}
 
 	@Override
-	public Optional<User> findById(String id) {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
 	public boolean existsById(Long id) {
 		// TODO Auto-generated method stub
 		return false;
@@ -159,9 +153,21 @@ public class UserRepository implements IUserRepository {
 	}
 
 	@Override
+	public Optional<User> findById(Long id) {
+		// TODO Auto-generated method stub
+		return null;
+	};
+
+	@Override
 	public <S extends User> boolean exists(Example<S> example) {
 		// TODO Auto-generated method stub
 		return false;
+	}
+
+	@Override
+	public Optional<User> findById(String id) {
+		// TODO Auto-generated method stub
+		return null;
 	}
 
 	@Override
@@ -184,8 +190,8 @@ public class UserRepository implements IUserRepository {
 		query += " INNER JOIN phones AS p ON u.phoneid=p.id ";
 		return jdbcOperations.query(query, (rs, rowNum) -> {
 			return new User(rs.getString(rowNum), rs.getString("email"), rs.getString("password"),
-					rs.getDate("created"), rs.getDate("updated"), rs.getDate("last_login"), null, rs.getBoolean("is_active"),
-					roles, phones);
+					rs.getDate("created"), rs.getDate("updated"), rs.getDate("last_login"), null,
+					rs.getBoolean("is_active"), roles, phones);
 		});
-	};
+	}
 }

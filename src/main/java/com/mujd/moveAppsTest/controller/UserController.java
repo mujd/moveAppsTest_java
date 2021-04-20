@@ -4,15 +4,11 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.stream.Collectors;
 
 import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.core.GrantedAuthority;
-import org.springframework.security.core.authority.AuthorityUtils;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -31,9 +27,6 @@ import com.mujd.moveAppsTest.service.IUserService;
 import com.mujd.moveAppsTest.validation.EmailValidation;
 import com.mujd.moveAppsTest.validation.PasswordValidator;
 
-import io.jsonwebtoken.Jwts;
-import io.jsonwebtoken.SignatureAlgorithm;
-
 @RestController
 @RequestMapping("/api")
 public class UserController {
@@ -42,8 +35,6 @@ public class UserController {
 	private IUserService iUserservice;
 	@Autowired
 	private PasswordEncoder passwordEncoder;
-	@Autowired
-	private BCryptPasswordEncoder bCryptPasswordEncoder;
 
 	private static EmailValidation emailValidation;
 	private static PasswordValidator passwordValidator;
@@ -119,51 +110,4 @@ public class UserController {
 		return response;
 	}
 
-	// Login
-	@PostMapping("/login")
-	public ResponseEntity<User> login(@RequestBody User user) throws ResourceBadRequestException {
-		User userDB = iUserservice.findByEmail(user);
-
-		if (userDB == null) {
-			throw new ResourceBadRequestException("El email o passoword ingresado no es válido.");
-		}
-		// Test passwords
-		boolean result = bCryptPasswordEncoder.matches(user.getPassword(), userDB.getPassword());
-
-		if (result == false) {
-			throw new ResourceBadRequestException("El email o passoword ingresado no es válido.");
-		} else {
-			String token = getJWTToken(user.getEmail());
-			User logUser = new User();
-			logUser.setEmail(user.getEmail());
-			logUser.setToken(token);
-			logUser.setPassword(":)");
-			return ResponseEntity.ok().body(logUser);
-		}
-	}
-
-	@GetMapping("/rev-token")
-	public Map<String, String> revalidateToken(@RequestBody User user) {
-
-		String token = getJWTToken(user.getEmail());
-		Map<String, String> response = new HashMap<>();
-		response.put("token", token);
-
-		return response;
-	}
-
-	// JWT
-	private String getJWTToken(String email) {
-		String secretKey = "mySecretKey";
-		List<GrantedAuthority> grantedAuthorities = AuthorityUtils.commaSeparatedStringToAuthorityList("ROLE_USER");
-
-		String token = Jwts.builder().setId("softtekJWT").setSubject(email)
-				.claim("authorities",
-						grantedAuthorities.stream().map(GrantedAuthority::getAuthority).collect(Collectors.toList()))
-				.setIssuedAt(new Date(System.currentTimeMillis()))
-				.setExpiration(new Date(System.currentTimeMillis() + 600000))
-				.signWith(SignatureAlgorithm.HS512, secretKey.getBytes()).compact();
-
-		return "Bearer " + token;
-	}
 }

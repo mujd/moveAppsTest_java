@@ -52,7 +52,7 @@ public class User {
 	@Enumerated(EnumType.STRING)
 	private Roles role = Roles.SUPER_ADMIN;
 
-	@OneToMany(fetch = FetchType.EAGER, cascade = { CascadeType.ALL })
+	@OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
 	@JoinColumn(name = "user_id")
 	public Set<Phone> phones;
 
