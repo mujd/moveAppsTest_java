@@ -91,6 +91,7 @@ public class UserController {
 		userDB.setPassword(passwordEncoder.encode(user.getPassword()));
 		userDB.setIsActive(user.getIsActive());
 		userDB.setRole(user.getRole());
+		userDB.setPhones(user.getPhones());
 		userDB.setUpdated(new Date());
 		iUserservice.updateUser(userDB);
 

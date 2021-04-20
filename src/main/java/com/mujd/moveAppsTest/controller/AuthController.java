@@ -30,7 +30,7 @@ import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 
 @RestController
-@RequestMapping("/api")
+@RequestMapping("/api/auth")
 public class AuthController {
 
 	@Autowired
@@ -42,7 +42,7 @@ public class AuthController {
 	private static PasswordValidator passwordValidator;
 	@Autowired
 	private BCryptPasswordEncoder bCryptPasswordEncoder;
-	
+
 	// register user
 	@PostMapping("/register")
 	public ResponseEntity<User> createUser(@Valid @RequestBody User user) throws ResourceBadRequestException {
@@ -68,7 +68,7 @@ public class AuthController {
 			throw new ResourceBadRequestException("Usuario con el email '" + user.getEmail() + "' ya esta registrado.");
 		}
 	}
-	
+
 	// Login
 	@PostMapping("/login")
 	public ResponseEntity<User> login(@RequestBody User user) throws ResourceBadRequestException {
@@ -95,17 +95,21 @@ public class AuthController {
 	}
 
 	@PostMapping("/rev-token")
-	public ResponseEntity<User> revalidateToken(@RequestBody User user) {
-
-		String token = getJWTToken(user.getEmail());
-		User logUser = new User();
-		logUser.setEmail(user.getEmail());
-		logUser.setToken(token);
+	public ResponseEntity<User> revalidateToken(@RequestBody User user) throws ResourceBadRequestException {
+		User userDB = iUserservice.findByEmail(user);
+		if (userDB != null) {
+			String token = getJWTToken(user.getEmail());
+			User logUser = new User();
+			logUser.setEmail(user.getEmail());
+			logUser.setToken(token);
 //		Map<String, String> response = new HashMap<>();
 //		response.put("token", token);
 //
 //		return response;
-		return ResponseEntity.ok().body(logUser);
+			return ResponseEntity.ok().body(logUser);
+		} else {
+			throw new ResourceBadRequestException("Error al revalidar token.");			
+		}
 	}
 
 	// JWT
